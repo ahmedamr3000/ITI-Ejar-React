@@ -106,12 +106,10 @@ export default function Wishlist() {
           color: "#777",
           textAlign: "center",
           padding: "50px 20px",
-          color: "#777",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           alignItems: "center",
-          height: "60vh",
         }}
       >
         <i
