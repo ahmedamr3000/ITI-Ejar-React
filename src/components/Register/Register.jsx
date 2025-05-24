@@ -1,134 +1,134 @@
-import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 // Import  subcomponents
-import PasswordInput from '../../components/RegisterComponents/PasswordInput';
-import TextInput from '../../components/RegisterComponents/TextInput';
-import FileInput from '../../components/RegisterComponents/FileInput';
-import GenderInput from '../../components/RegisterComponents/GenderInput';
-import ProfilePicture from '../ProfilePicture/ProfilePicture';
+import PasswordInput from "../../components/RegisterComponents/PasswordInput";
+import TextInput from "../../components/RegisterComponents/TextInput";
+import FileInput from "../../components/RegisterComponents/FileInput";
+import GenderInput from "../../components/RegisterComponents/GenderInput";
+import ProfilePicture from "../ProfilePicture/ProfilePicture";
 
 export default function Register() {
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-  const [duplicateFileError, setDuplicateFileError] = useState('');
+  const [duplicateFileError, setDuplicateFileError] = useState("");
 
   useEffect(() => {
-    document.title = 'Register | EJAR';
+    document.title = "Register | EJAR";
   }, []);
 
   const navigate = useNavigate();
   const initialValues = {
-    userName: '',
-    email: '',
-    password: '',
-    confirmedPassword: '',
-    phone: '',
-    dob: '',
-    address: '',
-    idNumber: '',
-    gender: 'male',
+    userName: "",
+    email: "",
+    password: "",
+    confirmedPassword: "",
+    phone: "",
+    dob: "",
+    address: "",
+    idNumber: "",
+    gender: "male",
     idPictureFront: null,
     idPictureBack: null,
   };
   //  Yup validation
   const validationSchema = Yup.object({
     userName: Yup.string()
-      .min(3, 'Name should be at least 3 characters long')
-      .max(30, 'Name should be at most 30 characters long')
+      .min(3, "Name should be at least 3 characters long")
+      .max(30, "Name should be at most 30 characters long")
       .matches(
         /^[a-zA-Z_ ]+$/,
-        'Name must only contain letters, underscores, and spaces.'
+        "Name must only contain letters, underscores, and spaces."
       )
-      .required('Name is required'),
+      .required("Name is required"),
     email: Yup.string()
-      .email('Invalid email address')
+      .email("Invalid email address")
       .matches(
         /^[\w-.]+@([\w-]+\.)+(com|net|org|eg)$/i,
-        'Please enter a valid email ending in .com, .net, .org, or .eg'
+        "Please enter a valid email ending in .com, .net, .org, or .eg"
       )
-      .required('Email is required'),
+      .required("Email is required"),
     password: Yup.string()
-      .min(8, 'Password should be at least 8 characters long')
+      .min(8, "Password should be at least 8 characters long")
       .matches(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        'Password must contain at least one uppercase, one lowercase letter, one number, and one special character'
+        "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
       )
-      .required(' password is required'),
+      .required(" password is required"),
 
     confirmedPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
       .matches(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        'Password must contain at least one uppercase, one lowercase letter, one number, and one special character'
+        "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
       )
-      .required('Confirm password is required'),
+      .required("Confirm password is required"),
 
     phone: Yup.string()
       .matches(
         /^01[0125][0-9]{8}$/,
-        'Phone number must be a valid Egyptian number (01[0,1,2,5]xxxxxxxx) and be 11 digits'
+        "Phone number must be a valid Egyptian number (01[0,1,2,5]xxxxxxxx) and be 11 digits"
       )
-      .required('Phone number is required'),
+      .required("Phone number is required"),
     dob: Yup.date()
-      .typeError('Date of birth must be a valid date')
+      .typeError("Date of birth must be a valid date")
       .min(
         new Date(new Date().setFullYear(new Date().getFullYear() - 70)),
-        'You must not be older than 70 years old'
+        "You must not be older than 70 years old"
       )
       .max(
         new Date(new Date().setFullYear(new Date().getFullYear() - 15)),
-        'You must be at least 15 years old'
+        "You must be at least 15 years old"
       )
-      .required('Date of birth is required'),
+      .required("Date of birth is required"),
 
     address: Yup.string()
-      .min(7, 'Address must be at least 7 characters.')
-      .max(50, 'Address must not exceed 50 characters.')
+      .min(7, "Address must be at least 7 characters.")
+      .max(50, "Address must not exceed 50 characters.")
       .matches(
         /^(?=(?:.*[a-zA-Z]){3,})[a-zA-Z0-9\s,'-]+$/,
-        'Address must contain at least three letters. Only letters, numbers, spaces, commas, apostrophes, and dashes are allowed.'
+        "Address must contain at least three letters. Only letters, numbers, spaces, commas, apostrophes, and dashes are allowed."
       )
       .required(
-        'Address is required, Please enter your full address (street, city, etc.).'
+        "Address is required, Please enter your full address (street, city, etc.)."
       ),
-      idNumber: Yup.string()
+    idNumber: Yup.string()
       .matches(
         /^[2-3][0-9]{13}$/,
-        'Invalid Egyptian ID number (must start with 2 or 3 and be 14 digits)'
+        "Invalid Egyptian ID number (must start with 2 or 3 and be 14 digits)"
       )
-      .required('ID Number is required')
-      .test('dob-match', 'ID Number does not match Date of Birth', function (idNumber) {
-        const { dob } = this.parent;
-        if (!dob || !idNumber) return true; // Don't validate if either is missing
-    
-        const dobDate = new Date(dob);
-        const year = dobDate.getFullYear();
-        const month = String(dobDate.getMonth() + 1).padStart(2, '0');
-        const day = String(dobDate.getDate()).padStart(2, '0');
-    
-        const idCentury = idNumber.charAt(0) === '2' ? 1900 : 2000;
-        const idYear = parseInt(idNumber.substring(1, 3), 10);
-        const idMonth = idNumber.substring(3, 5);
-        const idDay = idNumber.substring(5, 7);
-    
-        const fullIdYear = idCentury + idYear;
-    
-        return (
-          year === fullIdYear &&
-          month === idMonth &&
-          day === idDay
-        );
-      }),
-    
+      .required("ID Number is required")
+      .test(
+        "dob-match",
+        "ID Number does not match Date of Birth",
+        function (idNumber) {
+          const { dob } = this.parent;
+          if (!dob || !idNumber) return true; // Don't validate if either is missing
+
+          const dobDate = new Date(dob);
+          const year = dobDate.getFullYear();
+          const month = String(dobDate.getMonth() + 1).padStart(2, "0");
+          const day = String(dobDate.getDate()).padStart(2, "0");
+
+          const idCentury = idNumber.charAt(0) === "2" ? 1900 : 2000;
+          const idYear = parseInt(idNumber.substring(1, 3), 10);
+          const idMonth = idNumber.substring(3, 5);
+          const idDay = idNumber.substring(5, 7);
+
+          const fullIdYear = idCentury + idYear;
+
+          return year === fullIdYear && month === idMonth && day === idDay;
+        }
+      ),
+
     gender: Yup.string()
-      .oneOf(['male', 'female'])
-      .required('Gender is required'),
-    idPictureFront: Yup.mixed().required('Front ID Picture is required'),
-    idPictureBack: Yup.mixed().required('Back ID Picture is required'),
+      .oneOf(["male", "female"])
+      .required("Gender is required"),
+    idPictureFront: Yup.mixed().required("Front ID Picture is required"),
+    idPictureBack: Yup.mixed().required("Back ID Picture is required"),
   });
 
   async function register(values) {
@@ -149,10 +149,10 @@ export default function Register() {
         }
       });
       const response = await axios.post(
-        'http://localhost:3000/api/auth/signUp',
+        "https://iti-ejar-node-production.up.railway.app/api/auth/signUp",
         formData,
         {
-          headers: { 'Content-Type': 'multipart/form-data' },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
@@ -160,13 +160,13 @@ export default function Register() {
         setRegistrationSuccess(true);
 
         setTimeout(() => {
-          navigate('/login');
+          navigate("/login");
         }, 2000);
       }
     } catch (error) {
-      console.error('API Error:', error.response?.data);
-      setApiError(error.response?.data?.message || 'Something went wrong...');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      console.error("API Error:", error.response?.data);
+      setApiError(error.response?.data?.message || "Something went wrong...");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } finally {
       setIsLoading(false);
     }
@@ -180,21 +180,21 @@ export default function Register() {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f8f9fa', // optional: light gray bg
-        padding: '20px',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f8f9fa", // optional: light gray bg
+        padding: "20px",
       }}
     >
-      <div className="container" style={{ width: '100%' }}>
+      <div className="container" style={{ width: "100%" }}>
         <h2
           className="text-left"
           style={{
-            color: '#562DDD',
-            fontSize: '42px',
-            fontWeight: 'bold',
+            color: "#562DDD",
+            fontSize: "42px",
+            fontWeight: "bold",
           }}
         >
           Create an account
@@ -265,7 +265,7 @@ export default function Register() {
 
           {/* ID PICTURES (Front/Back) */}
           <div className="col-md-6 d-flex justify-content-between">
-            <div style={{ width: '48%' }}>
+            <div style={{ width: "48%" }}>
               <FileInput
                 label="ID Picture (Front):"
                 fieldName="idPictureFront"
@@ -274,7 +274,7 @@ export default function Register() {
                 otherFileField="idPictureBack"
               />
             </div>
-            <div style={{ width: '48%' }}>
+            <div style={{ width: "48%" }}>
               <FileInput
                 label="ID Picture (Back):"
                 fieldName="idPictureBack"
@@ -291,11 +291,11 @@ export default function Register() {
               className="btn"
               disabled={isLoading}
               style={{
-                backgroundColor: '#562DDD',
-                color: 'white',
-                width: '50%',
-                fontSize: '22px',
-                marginTop: '5px',
+                backgroundColor: "#562DDD",
+                color: "white",
+                width: "50%",
+                fontSize: "22px",
+                marginTop: "5px",
               }}
             >
               {isLoading ? (
@@ -308,19 +308,19 @@ export default function Register() {
                   Loading...
                 </>
               ) : (
-                'Create Account'
+                "Create Account"
               )}
             </button>
 
-            <p className="mt-3" style={{ fontSize: '16px' }}>
-              Already have an account?{' '}
+            <p className="mt-3" style={{ fontSize: "16px" }}>
+              Already have an account?{" "}
               <span
-                onClick={() => navigate('/login')}
+                onClick={() => navigate("/login")}
                 style={{
-                  color: '#5A3FFF',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  fontWeight: '600',
+                  color: "#5A3FFF",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
                 }}
               >
                 Log in

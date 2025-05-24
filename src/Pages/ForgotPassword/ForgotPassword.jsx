@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import TextInput from "../../components/RegisterComponents/TextInput"; 
+import TextInput from "../../components/RegisterComponents/TextInput";
 
 export default function ForgotPassword() {
   const [apiMessage, setApiMessage] = useState(null);
@@ -27,9 +27,12 @@ export default function ForgotPassword() {
         setIsDisabled(true);
         setCountdown(60); // ⏳ Start countdown at 60 seconds
 
-        const response = await axios.post("http://localhost:3000/api/auth/forgot-password", {
-          email: values.email,
-        });
+        const response = await axios.post(
+          "https://iti-ejar-node-production.up.railway.app/api/auth/forgot-password",
+          {
+            email: values.email,
+          }
+        );
 
         if (response.status === 200) {
           setApiMessage("✅ Password reset link sent! Check your email.");
@@ -55,13 +58,21 @@ export default function ForgotPassword() {
   });
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "600px", margin: "0 auto",  minHeight: '100vh' }}>
-      <h2 className="text-left" style={{ color: "#562DDD", fontSize: "30px", fontWeight: 700 }}>
+    <div
+      className="container mt-5"
+      style={{ maxWidth: "600px", margin: "0 auto", minHeight: "100vh" }}
+    >
+      <h2
+        className="text-left"
+        style={{ color: "#562DDD", fontSize: "30px", fontWeight: 700 }}
+      >
         Forgot Password?
       </h2>
       <p className="text-left">Enter your email to receive a reset link.</p>
 
-      {apiMessage && <div className="alert alert-info text-center">{apiMessage}</div>}
+      {apiMessage && (
+        <div className="alert alert-info text-center">{apiMessage}</div>
+      )}
 
       <form onSubmit={formik.handleSubmit} className="row g-3">
         <div className="col-12">
@@ -82,19 +93,30 @@ export default function ForgotPassword() {
               marginBottom: "15px",
             }}
           >
-            {isLoading ? "Sending..." : isDisabled ? `Try again in ${countdown}s` : "Send Reset Link"}
+            {isLoading
+              ? "Sending..."
+              : isDisabled
+              ? `Try again in ${countdown}s`
+              : "Send Reset Link"}
           </button>
 
           {/* Show message when button is disabled */}
           {isDisabled && (
-            <p className="text-danger mt-2">You can request a new link in {countdown} seconds.</p>
+            <p className="text-danger mt-2">
+              You can request a new link in {countdown} seconds.
+            </p>
           )}
 
           <p className="mt-3" style={{ fontSize: "16px" }}>
             Don't have an account?{" "}
             <span
               onClick={() => navigate("/register")}
-              style={{ color: "#5A3FFF", textDecoration: "underline", cursor: "pointer", fontWeight: "600" }}
+              style={{
+                color: "#5A3FFF",
+                textDecoration: "underline",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
             >
               Register
             </span>

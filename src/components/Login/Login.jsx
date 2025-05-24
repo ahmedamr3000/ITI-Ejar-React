@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { useLocation, useNavigate } from 'react-router-dom';
-import TextInput from '../../components/RegisterComponents/TextInput';
-import PasswordInput from '../../components/RegisterComponents/PasswordInput';
-import useAuthStore from '../../Store/Auth';
-import { jwtDecode } from 'jwt-decode';
-import { Link } from 'react-router-dom';
-import ejarLogo from '../../assets/logo.png';
-import { toast } from 'react-toastify';
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
+import TextInput from "../../components/RegisterComponents/TextInput";
+import PasswordInput from "../../components/RegisterComponents/PasswordInput";
+import useAuthStore from "../../Store/Auth";
+import { jwtDecode } from "jwt-decode";
+import { Link } from "react-router-dom";
+import ejarLogo from "../../assets/logo.png";
+import { toast } from "react-toastify";
 
 export default function Login() {
   const [apiError, setApiError] = useState(null);
@@ -21,12 +21,12 @@ export default function Login() {
 
   // SECURITY: Block token-in-URL issue from affecting React login
   useEffect(() => {
-    document.title = 'Login | EJAR';
+    document.title = "Login | EJAR";
 
     const query = new URLSearchParams(window.location.search);
-    if (query.has('token')) {
-      console.warn('Token in URL detected — clearing it from React app');
-      window.history.replaceState({}, '', window.location.pathname);
+    if (query.has("token")) {
+      console.warn("Token in URL detected — clearing it from React app");
+      window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
 
@@ -38,16 +38,16 @@ export default function Login() {
 
   const formik = useFormik({
     initialValues: {
-      identifier: '', //  Accepts email or phone
-      password: '',
+      identifier: "", //  Accepts email or phone
+      password: "",
       rememberMe: false,
     },
     validationSchema: Yup.object({
       identifier: Yup.string()
-        .test('is-valid-identifier', function (value) {
+        .test("is-valid-identifier", function (value) {
           if (!value) {
             return this.createError({
-              message: 'Email or phone number is required.',
+              message: "Email or phone number is required.",
             });
           }
           // Check if it's a valid email
@@ -62,17 +62,17 @@ export default function Login() {
 
           return this.createError({
             message:
-              'Invalid format. Use a valid email (e.g., user@example.com) or a valid Egyptian number (01xxxxxxxxx).',
+              "Invalid format. Use a valid email (e.g., user@example.com) or a valid Egyptian number (01xxxxxxxxx).",
           });
         })
-        .required('Email or phone number is required.'),
+        .required("Email or phone number is required."),
       password: Yup.string()
-        .min(8, 'Password should be at least 8 characters long')
+        .min(8, "Password should be at least 8 characters long")
         .matches(
           /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-          'Password must contain at least one uppercase, one lowercase letter, one number, and one special character'
+          "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
         )
-        .required('password is required'),
+        .required("password is required"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -80,32 +80,32 @@ export default function Login() {
         setIsLoading(true);
 
         const response = await axios.post(
-          'http://localhost:3000/api/auth/login',
+          "https://iti-ejar-node-production.up.railway.app/api/auth/login",
           {
             identifier: values.identifier, // Send email OR phone
             password: values.password,
           },
           {
-            headers: { 'Content-Type': 'application/json' },
+            headers: { "Content-Type": "application/json" },
           }
         );
 
         if (response.status === 200) {
-          console.log('Login Successful:', response.data);
+          console.log("Login Successful:", response.data);
           const token = response.data.token;
           // Store token in Zustand(and local/session storage depending on rememberMe)
           setToken(response.data.token, values.rememberMe);
           // Decode token
           const decoded = jwtDecode(token);
-          console.log('Decoded token:', decoded);
+          console.log("Decoded token:", decoded);
           setTimeout(() => {
-            navigate('/');
+            navigate("/");
           }, 2000);
         }
       } catch (error) {
-        console.error('API Error:', error.response?.data);
-        setApiError(error.response?.data?.message || 'Invalid credentials.');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        console.error("API Error:", error.response?.data);
+        setApiError(error.response?.data?.message || "Invalid credentials.");
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } finally {
         setIsLoading(false);
         setSubmitting(false);
@@ -116,22 +116,22 @@ export default function Login() {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <div className="container" style={{ maxWidth: '900px', width: '100%' }}>
+      <div className="container" style={{ maxWidth: "900px", width: "100%" }}>
         <div className="text-center mb-3">
           <Link to="/">
             <img
               src={ejarLogo}
               alt="Ejar Logo"
               style={{
-                height: '80px',
-                cursor: 'pointer',
-                marginBottom: '50px',
+                height: "80px",
+                cursor: "pointer",
+                marginBottom: "50px",
               }}
             />
           </Link>
@@ -140,10 +140,10 @@ export default function Login() {
         <h2
           className="text-left"
           style={{
-            color: '#562DDD',
-            fontSize: '34px',
+            color: "#562DDD",
+            fontSize: "34px",
             fontWeight: 700,
-            marginBottom: '20px',
+            marginBottom: "20px",
           }}
         >
           Log in to Ejar
@@ -181,7 +181,7 @@ export default function Login() {
               <label
                 className="form-check-label"
                 htmlFor="rememberMe"
-                style={{ fontSize: '16px' }}
+                style={{ fontSize: "16px" }}
               >
                 Remember Me
               </label>
@@ -194,12 +194,12 @@ export default function Login() {
               className="btn"
               disabled={isLoading}
               style={{
-                backgroundColor: '#562DDD',
-                color: 'white',
-                width: '70%',
-                fontSize: '22px',
-                marginTop: '5px',
-                marginBottom: '10px',
+                backgroundColor: "#562DDD",
+                color: "white",
+                width: "70%",
+                fontSize: "22px",
+                marginTop: "5px",
+                marginBottom: "10px",
               }}
             >
               {isLoading ? (
@@ -212,29 +212,29 @@ export default function Login() {
                   Loading...
                 </>
               ) : (
-                'Log In'
+                "Log In"
               )}
             </button>
             {/* FORGOT PASSWORD & REGISTER LINKS */}
             <p className="text-center mt-2">
               <span
                 className="text-danger"
-                style={{ cursor: 'pointer', textDecoration: 'underline' }}
-                onClick={() => navigate('/forgot-password')}
+                style={{ cursor: "pointer", textDecoration: "underline" }}
+                onClick={() => navigate("/forgot-password")}
               >
                 Forgot Password?
               </span>
             </p>
 
-            <p className="mt-3" style={{ fontSize: '16px' }}>
-              Don't have account ?{' '}
+            <p className="mt-3" style={{ fontSize: "16px" }}>
+              Don't have account ?{" "}
               <span
-                onClick={() => navigate('/register')}
+                onClick={() => navigate("/register")}
                 style={{
-                  color: '#5A3FFF',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  fontWeight: '600',
+                  color: "#5A3FFF",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
                 }}
               >
                 register

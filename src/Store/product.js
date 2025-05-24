@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { create } from 'zustand';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { create } from "zustand";
 
 const useProductStore = create((set, get) => ({
   userProducts: [],
@@ -10,12 +10,12 @@ const useProductStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await axios.post(
-        `http://localhost:3000/api/product`,
+        `https://iti-ejar-node-production.up.railway.app/api/product`,
         productData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -31,11 +31,14 @@ const useProductStore = create((set, get) => ({
   getUserProducts: async (token, userId) => {
     try {
       set({ loading: true, error: null });
-      const response = await axios.get(`http://localhost:3000/api/product`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://iti-ejar-node-production.up.railway.app/api/product`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const allProducts = response?.data?.data;
       const userProducts = allProducts.filter(
         (product) => product.renterId._id === userId
@@ -53,7 +56,7 @@ const useProductStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await axios.get(
-        `http://localhost:3000/api/product/finished`,
+        `https://iti-ejar-node-production.up.railway.app/api/product/finished`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

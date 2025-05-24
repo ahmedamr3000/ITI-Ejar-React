@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-import useChatStore from '../../Store/chatStore';
-import { MoonLoader } from 'react-spinners';
-import './Messages.css';
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+import useChatStore from "../../Store/chatStore";
+import { MoonLoader } from "react-spinners";
+import "./Messages.css";
 
-const socket = io('http://localhost:3000');
+const socket = io("https://iti-ejar-node-production.up.railway.app");
 
 export default function Messages({ chatId, token, userId }) {
   const [otherMember, setOtherMember] = useState(null);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const {
     messagesError,
     chatMessages,
@@ -20,7 +20,7 @@ export default function Messages({ chatId, token, userId }) {
 
   useEffect(() => {
     const scrollToBottom = () => {
-      const chatContainer = document.querySelector('.chat-container');
+      const chatContainer = document.querySelector(".chat-container");
       if (chatContainer) {
         chatContainer.scrollTop = chatContainer.scrollHeight;
       }
@@ -38,7 +38,7 @@ export default function Messages({ chatId, token, userId }) {
           setOtherMember(other);
         }
       } catch (error) {
-        console.error('Error fetching chat:', error);
+        console.error("Error fetching chat:", error);
       }
     };
 
@@ -46,17 +46,17 @@ export default function Messages({ chatId, token, userId }) {
   }, [getChatById, chatId, token, userId]);
 
   useEffect(() => {
-    socket.emit('joinChat', chatId);
+    socket.emit("joinChat", chatId);
 
     getChatMessages(chatId, token);
 
-    socket.on('recieveMessage', (newMessage) => {
+    socket.on("recieveMessage", (newMessage) => {
       if (!newMessage.createdAt) {
         newMessage.createdAt = new Date().toLocaleString();
       }
       setChatMessages(newMessage);
     });
-    return () => socket.off('recieveMessage');
+    return () => socket.off("recieveMessage");
   }, [setChatMessages, getChatMessages, chatId, token]);
 
   const sendMessage = () => {
@@ -67,11 +67,11 @@ export default function Messages({ chatId, token, userId }) {
         content: message,
       };
 
-      socket.emit('sendMessage', newMessage);
+      socket.emit("sendMessage", newMessage);
 
       postMessage(newMessage, token);
 
-      setMessage('');
+      setMessage("");
     }
   };
 
@@ -79,20 +79,20 @@ export default function Messages({ chatId, token, userId }) {
     return (
       <div
         style={{
-          width: '100%',
-          textAlign: 'center',
-          padding: '50px 20px',
-          color: '#777',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '60vh',
+          width: "100%",
+          textAlign: "center",
+          padding: "50px 20px",
+          color: "#777",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh",
         }}
       >
         <i
           className="bi bi-chat-dots"
-          style={{ fontSize: '80px', marginBottom: '20px', color: '#b72a67' }}
+          style={{ fontSize: "80px", marginBottom: "20px", color: "#b72a67" }}
         />
         <h2>Chat not found</h2>
         <p>Please select a chat from the sidebar.</p>
@@ -104,19 +104,19 @@ export default function Messages({ chatId, token, userId }) {
     return (
       <div
         style={{
-          width: '100%',
-          textAlign: 'center',
-          color: '#777',
-          display: 'flex',
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '60vh',
+          width: "100%",
+          textAlign: "center",
+          color: "#777",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "60vh",
         }}
       >
         <i
           className="bi bi-exclamation-triangle-fill"
-          style={{ fontSize: '80px', marginBottom: '20px', color: '#b72a67' }}
+          style={{ fontSize: "80px", marginBottom: "20px", color: "#b72a67" }}
         />
         <h2>Server error</h2>
         <p>Please try again later.</p>
@@ -135,7 +135,7 @@ export default function Messages({ chatId, token, userId }) {
             width={80}
             height={80}
             style={{
-              objectFit: 'cover',
+              objectFit: "cover",
             }}
           />
           <h4 className="mt-2">{otherMember.userName}</h4>
@@ -145,15 +145,15 @@ export default function Messages({ chatId, token, userId }) {
           className="w-100"
           style={{
             flex: 1,
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '50vh',
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "50vh",
           }}
         >
           <div className="d-flex flex-column justify-content-center align-items-center">
             <MoonLoader color="#b72a67" size={100} />
-            <p className="mt-3" style={{ color: '#555', fontSize: '16px' }}>
+            <p className="mt-3" style={{ color: "#555", fontSize: "16px" }}>
               Loading conversation, please wait...
             </p>
           </div>
@@ -161,27 +161,27 @@ export default function Messages({ chatId, token, userId }) {
       )}
       <div
         className="d-flex flex-column chat-container"
-        style={{ overflowY: 'scroll', flex: 1 }}
+        style={{ overflowY: "scroll", flex: 1 }}
       >
         {otherMember && chatMessages.length === 0 ? (
           <div
             style={{
-              textAlign: 'center',
-              padding: '50px 20px',
-              color: '#777',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '60vh',
+              textAlign: "center",
+              padding: "50px 20px",
+              color: "#777",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "60vh",
             }}
           >
             <i
               className="bi bi-chat-left-text"
               style={{
-                fontSize: '60px',
-                marginBottom: '20px',
-                color: '#b72a67',
+                fontSize: "60px",
+                marginBottom: "20px",
+                color: "#b72a67",
               }}
             />
             <h2>No messages yet</h2>
@@ -197,18 +197,18 @@ export default function Messages({ chatId, token, userId }) {
                 <p className="small text-muted text-end">
                   {msg.createdAt
                     ? new Date(msg.createdAt).toLocaleString()
-                    : ''}
+                    : ""}
                 </p>
               </div>
             ) : (
               <div key={index} className="mx-3 align-self-start">
                 <h5 className="p-2 bg-light w-auto rounded-4 text-center">
                   {msg.content}
-                </h5>{' '}
+                </h5>{" "}
                 <p className="small text-muted">
                   {msg.createdAt
                     ? new Date(msg.createdAt).toLocaleString()
-                    : ''}
+                    : ""}
                 </p>
               </div>
             )
@@ -222,7 +222,7 @@ export default function Messages({ chatId, token, userId }) {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyPress={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               sendMessage();
             }
           }}

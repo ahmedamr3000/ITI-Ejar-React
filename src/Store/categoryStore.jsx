@@ -1,26 +1,28 @@
-import { create } from 'zustand';
-import axios from 'axios';
+import { create } from "zustand";
+import axios from "axios";
 
 const useCategoryStore = create((set, get) => ({
   categories: [],
   loading: false,
   error: null,
-  success: false, 
+  success: false,
 
   // get all
   fetchCategories: async () => {
     set({ loading: true, error: null, success: false });
     try {
-      const response = await axios.get('http://localhost:3000/api/category/');
-      set({ 
-        categories: response.data.data, 
+      const response = await axios.get(
+        "https://iti-ejar-node-production.up.railway.app/api/category/"
+      );
+      set({
+        categories: response.data.data,
         success: response.data.success,
-        loading: false 
+        loading: false,
       });
     } catch (error) {
-      set({ 
-        error: error.response?.data?.message || error.message, 
-        loading: false 
+      set({
+        error: error.response?.data?.message || error.message,
+        loading: false,
       });
     }
   },

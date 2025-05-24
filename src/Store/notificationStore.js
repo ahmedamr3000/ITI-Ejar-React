@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import axios from 'axios';
+import { create } from "zustand";
+import axios from "axios";
 
 const useNotificationStore = create((set, get) => ({
   notifications: [],
@@ -14,7 +14,7 @@ const useNotificationStore = create((set, get) => ({
     set({ isLoading: true });
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/notification`,
+        `https://iti-ejar-node-production.up.railway.app/api/notification`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -30,10 +30,10 @@ const useNotificationStore = create((set, get) => ({
         return response.data.notifications;
       }
     } catch (error) {
-      console.error('Error fetching notifications:', error);
+      console.error("Error fetching notifications:", error);
       set({
         isLoading: false,
-        error: error.message || 'Failed to fetch notifications',
+        error: error.message || "Failed to fetch notifications",
       });
     }
   },
@@ -64,7 +64,7 @@ const useNotificationStore = create((set, get) => ({
 
       // Otherwise, it's a database notification, so call the API
       await axios.patch(
-        `http://localhost:3000/api/notification/${notificationId}`,
+        `https://iti-ejar-node-production.up.railway.app/api/notification/${notificationId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -80,8 +80,8 @@ const useNotificationStore = create((set, get) => ({
         };
       });
     } catch (error) {
-      console.error('Error marking notification as read:', error);
-      set({ error: error.message || 'Failed to mark notification as read' });
+      console.error("Error marking notification as read:", error);
+      set({ error: error.message || "Failed to mark notification as read" });
     }
   },
 

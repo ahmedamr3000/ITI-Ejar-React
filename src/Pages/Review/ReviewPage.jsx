@@ -16,7 +16,9 @@ const ReviewPage = () => {
 
   const fetchAllUserReviews = async (userId) => {
     try {
-      const res = await axios.get(`http://localhost:3000/api/review/${userId}`);
+      const res = await axios.get(
+        `https://iti-ejar-node-production.up.railway.app/api/review/${userId}`
+      );
       console.log("Response from API:", res); // طباعة الـ response كاملاً
       const productIds = res.data.foundedReview.map(
         (review) => review.prodid?._id

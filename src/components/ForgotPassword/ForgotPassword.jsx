@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import TextInput from '../RegisterComponents/TextInput';
+import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import TextInput from "../RegisterComponents/TextInput";
 
 export default function ForgotPassword() {
   const [apiMessage, setApiMessage] = useState(null);
@@ -13,9 +13,9 @@ export default function ForgotPassword() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    document.title = 'Forgot Password | EJAR';
+    document.title = "Forgot Password | EJAR";
 
-    const savedTime = localStorage.getItem('resetCooldown');
+    const savedTime = localStorage.getItem("resetCooldown");
     if (savedTime) {
       const remaining = Math.floor((parseInt(savedTime) - Date.now()) / 1000);
       if (remaining > 0) {
@@ -23,7 +23,7 @@ export default function ForgotPassword() {
         setCountdown(remaining);
         startCountdown(remaining);
       } else {
-        localStorage.removeItem('resetCooldown');
+        localStorage.removeItem("resetCooldown");
       }
     }
   }, []);
@@ -36,21 +36,21 @@ export default function ForgotPassword() {
       if (seconds <= 0) {
         clearInterval(timer);
         setIsDisabled(false);
-        localStorage.removeItem('resetCooldown');
+        localStorage.removeItem("resetCooldown");
       }
     }, 1000);
   };
 
   const formik = useFormik({
-    initialValues: { email: '' },
+    initialValues: { email: "" },
     validationSchema: Yup.object({
       email: Yup.string()
-        .email('Enter a valid email (e.g., user@example.com).')
+        .email("Enter a valid email (e.g., user@example.com).")
         .matches(
           /^[\w-.]+@([\w-]+\.)+(com|net|org|eg)$/i,
-          'Please enter a valid email ending in .com, .net, .org, or .eg'
+          "Please enter a valid email ending in .com, .net, .org, or .eg"
         )
-        .required('Email is required.'),
+        .required("Email is required."),
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -58,23 +58,23 @@ export default function ForgotPassword() {
         setIsLoading(true);
 
         const response = await axios.post(
-          'http://localhost:3000/api/auth/forgot-password',
+          "https://iti-ejar-node-production.up.railway.app/api/auth/forgot-password",
           {
             email: values.email,
           }
         );
 
         if (response.status === 200) {
-          setApiMessage('✅ Password reset link sent! Check your email.');
+          setApiMessage("✅ Password reset link sent! Check your email.");
 
           // Only start countdown on success
           setIsDisabled(true);
           setCountdown(60);
-          localStorage.setItem('resetCooldown', Date.now() + 60000);
+          localStorage.setItem("resetCooldown", Date.now() + 60000);
           startCountdown(60);
         }
       } catch (error) {
-        setApiMessage(error.response?.data?.message || 'Something went wrong.');
+        setApiMessage(error.response?.data?.message || "Something went wrong.");
       } finally {
         setIsLoading(false);
         setSubmitting(false);
@@ -85,18 +85,18 @@ export default function ForgotPassword() {
   return (
     <div
       style={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#f8f9fa',
-        padding: '20px',
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#f8f9fa",
+        padding: "20px",
       }}
     >
-      <div className="container" style={{ maxWidth: '900px', width: '100%' }}>
+      <div className="container" style={{ maxWidth: "900px", width: "100%" }}>
         <h2
           className="text-left"
-          style={{ color: '#562DDD', fontSize: '30px', fontWeight: 700 }}
+          style={{ color: "#562DDD", fontSize: "30px", fontWeight: 700 }}
         >
           Forgot Password?
         </h2>
@@ -117,19 +117,19 @@ export default function ForgotPassword() {
               className="btn"
               disabled={isLoading || isDisabled} //  Button disabled properly
               style={{
-                backgroundColor: isDisabled ? '#ccc' : '#562DDD',
-                color: 'white',
-                width: '50%',
-                fontSize: '18px',
-                marginTop: '10px',
-                marginBottom: '15px',
+                backgroundColor: isDisabled ? "#ccc" : "#562DDD",
+                color: "white",
+                width: "50%",
+                fontSize: "18px",
+                marginTop: "10px",
+                marginBottom: "15px",
               }}
             >
               {isLoading
-                ? 'Sending...'
+                ? "Sending..."
                 : isDisabled
                 ? `Try again in ${countdown}s`
-                : 'Send Reset Link'}
+                : "Send Reset Link"}
             </button>
 
             {/* Show message when button is disabled */}
@@ -139,15 +139,15 @@ export default function ForgotPassword() {
               </p>
             )}
 
-            <p className="mt-3" style={{ fontSize: '16px' }}>
-              Don't have an account?{' '}
+            <p className="mt-3" style={{ fontSize: "16px" }}>
+              Don't have an account?{" "}
               <span
-                onClick={() => navigate('/register')}
+                onClick={() => navigate("/register")}
                 style={{
-                  color: '#5A3FFF',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  fontWeight: '600',
+                  color: "#5A3FFF",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  fontWeight: "600",
                 }}
               >
                 Register

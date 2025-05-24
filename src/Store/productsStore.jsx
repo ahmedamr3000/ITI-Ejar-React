@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 const useProductStore = create((set) => ({
   products: [],
@@ -9,8 +9,10 @@ const useProductStore = create((set) => ({
   fetchProducts: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch('http://localhost:3000/api/product/');
-      if (!response.ok) throw new Error('Error during fetch!');
+      const response = await fetch(
+        "https://iti-ejar-node-production.up.railway.app/api/product/"
+      );
+      if (!response.ok) throw new Error("Error during fetch!");
       const result = await response.json();
       set({ products: result.data, loading: false });
     } catch (err) {
@@ -18,16 +20,18 @@ const useProductStore = create((set) => ({
     }
   },
 
-  // fech products from the newest 
+  // fech products from the newest
   fetchSortedProducts: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await fetch('http://localhost:3000/api/product/');
-      if (!response.ok) throw new Error('Error during fetch!');
+      const response = await fetch(
+        "https://iti-ejar-node-production.up.railway.app/api/product/"
+      );
+      if (!response.ok) throw new Error("Error during fetch!");
       const result = await response.json();
-      
-      const sortedProducts = result.data.sort((a, b) => 
-        new Date(b.createdAt) - new Date(a.createdAt)
+
+      const sortedProducts = result.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       set({ products: sortedProducts, loading: false });
     } catch (err) {

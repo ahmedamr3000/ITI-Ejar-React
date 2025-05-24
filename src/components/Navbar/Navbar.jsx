@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import ejarLogo from '../../assets/logo.png';
-import './Navbar.css';
-import { Link, useNavigate } from 'react-router-dom';
-import useAuthStore from '../../Store/Auth';
-import useNotificationStore from '../../Store/notificationStore';
-import { jwtDecode } from 'jwt-decode';
-import { io } from 'socket.io-client';
-import { toast } from 'react-toastify';
-import useWishlistStore from '../../Store/Wishlist';
+import React, { useEffect, useState } from "react";
+import ejarLogo from "../../assets/logo.png";
+import "./Navbar.css";
+import { Link, useNavigate } from "react-router-dom";
+import useAuthStore from "../../Store/Auth";
+import useNotificationStore from "../../Store/notificationStore";
+import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
+import { toast } from "react-toastify";
+import useWishlistStore from "../../Store/Wishlist";
 
-const socket = io('http://localhost:3000');
+const socket = io("https://iti-ejar-node-production.up.railway.app");
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ export default function Navbar() {
     markAsRead,
     addNotification,
   } = useNotificationStore();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
   let decodedToken;
   if (token) {
@@ -33,29 +33,28 @@ export default function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       navigate(`/search?query=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
+      setSearchQuery("");
     }
     e.target.reset(); // Reset the form after submission
   };
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate("/");
   };
-  
-const { fetchWishlist } = useWishlistStore();
 
-useEffect(() => {
-  if (token) {
-    fetchWishlist(token);
-  } else {
-    // Clear wishlist when logging out
-    useWishlistStore.setState({ wishlist: [], count: 0 });
-  }
-}, [token]);
+  const { fetchWishlist } = useWishlistStore();
+
+  useEffect(() => {
+    if (token) {
+      fetchWishlist(token);
+    } else {
+      // Clear wishlist when logging out
+      useWishlistStore.setState({ wishlist: [], count: 0 });
+    }
+  }, [token]);
 
   const { count } = useWishlistStore(); // Get wishlist count from store
-
 
   useEffect(() => {
     // Only join and set up listeners if we have a token and userId
@@ -64,29 +63,29 @@ useEffect(() => {
       fetchNotifications(token);
 
       // Join the user's notification channel
-      socket.emit('joinUserNotifications', userId);
+      socket.emit("joinUserNotifications", userId);
       console.log(userId);
 
       // Set up the listener for verification changes
       const handleVerificationChange = (data) => {
-        console.log('Verification status notification:', data);
+        console.log("Verification status notification:", data);
 
         if (data.isVerified) {
           toast.success(data.message);
         } else {
           toast.warning(data.message);
-        // Logout the user and redirect to login page
+          // Logout the user and redirect to login page
           setTimeout(() => {
-           logout();
-            navigate('/login');
-          }, 1500); 
+            logout();
+            navigate("/login");
+          }, 1500);
         }
 
         // Add to notification store
         addNotification({
           _id: data.notificationId || `temp-${Date.now()}`,
           message: data.message,
-          type: 'verification',
+          type: "verification",
           data: data,
           createdAt: new Date().toISOString(),
           read: false,
@@ -96,7 +95,7 @@ useEffect(() => {
 
       // Product confirmation notification handler
       const handleProductConfirmation = (data) => {
-        console.log('Product confirmation notification:', data);
+        console.log("Product confirmation notification:", data);
 
         // Show toast notification
         if (data.confirmed === true) {
@@ -109,7 +108,7 @@ useEffect(() => {
         addNotification({
           _id: data.notificationId || `temp-${Date.now()}`,
           message: data.message,
-          type: 'product_confirmation',
+          type: "product_confirmation",
           data: data,
           createdAt: new Date().toISOString(),
           read: false,
@@ -118,14 +117,14 @@ useEffect(() => {
       };
 
       // Register the listener
-      socket.on('userVerificationChanged', handleVerificationChange);
+      socket.on("userVerificationChanged", handleVerificationChange);
       // Register the product confirmation listener
-      socket.on('productConfirmationChanged', handleProductConfirmation);
+      socket.on("productConfirmationChanged", handleProductConfirmation);
 
       // Clean up function to remove the listener when component unmounts
       return () => {
-        socket.off('userVerificationChanged', handleVerificationChange);
-        socket.off('productConfirmationChanged', handleProductConfirmation);
+        socket.off("userVerificationChanged", handleVerificationChange);
+        socket.off("productConfirmationChanged", handleProductConfirmation);
       };
     }
   }, [token, userId, fetchNotifications, addNotification]);
@@ -210,20 +209,20 @@ useEffect(() => {
                       <Link className="nav-link" to="/wishlist">
                         <i className="fa-regular fa-heart"></i>
                         {count > 0 && (
-                    <span className="position-absolute top-25 start-75 translate-middle badge rounded-pill bg-danger">
-                      {count}
-                    </span>
-                     )}
-                   </Link>
+                          <span className="position-absolute top-25 start-75 translate-middle badge rounded-pill bg-danger">
+                            {count}
+                          </span>
+                        )}
+                      </Link>
                     </li>
                     <li className="nav-item d-block d-lg-none mx-auto">
                       <Link className="nav-link" to="/wishlist">
                         Wishlist
                         {count > 0 && (
                           <span className="badge rounded-pill bg-danger ms-1">
-                      {count}
-                    </span>
-                     )}
+                            {count}
+                          </span>
+                        )}
                       </Link>
                     </li>
 

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
-import Slider from 'react-slick';
-import { Link } from 'react-router-dom';
-import useCategoryStore from '../../Store/categoryStore';
-import './CategoriesSection.css';
+import React, { useEffect } from "react";
+import Slider from "react-slick";
+import { Link } from "react-router-dom";
+import useCategoryStore from "../../Store/categoryStore";
+import "./CategoriesSection.css";
 import { MoonLoader } from "react-spinners";
 
 function CategoriesSection() {
@@ -45,7 +45,14 @@ function CategoriesSection() {
   if (loading) {
     return (
       <div
-        style={{ display: "flex",flexDirection: "column", justifyContent: "center", alignItems: "center", height: "50vh", width: "100%",}}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+          width: "100%",
+        }}
       >
         <MoonLoader color="#b72a67" size={80} />
         <p style={{ marginTop: 20, fontSize: "16px", color: "#555" }}>
@@ -58,10 +65,17 @@ function CategoriesSection() {
   if (error) {
     return (
       <div
-        style={{  textAlign: "center",  padding: "50px 20px", color: "#777",  display: "flex", flexDirection: "column", 
-          justifyContent: "center",  alignItems: "center",  height: "50vh",  }}
+        style={{
+          textAlign: "center",
+          padding: "50px 20px",
+          color: "#777",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "50vh",
+        }}
       >
-      
         <i
           className="bi bi-grid-1x2-fill"
           style={{ fontSize: "60px", marginBottom: "20px", color: "#b72a67" }}
@@ -77,7 +91,6 @@ function CategoriesSection() {
       <h2 className="ms-2">Browse By Category</h2>
       <Slider {...settings}>
         {categories.map((category) => (
-
           <Link
             key={category._id}
             className="nav-link"
@@ -85,7 +98,9 @@ function CategoriesSection() {
           >
             <div className="cat mb-4">
               <i className={`fa-solid ${category.icon} fs-1`}></i>
-              <h3 className="mt-3 mb-0 fs-5 fw-normal text-capitalize">{category.name}</h3>
+              <h3 className="mt-3 mb-0 fs-5 fw-normal text-capitalize">
+                {category.name}
+              </h3>
             </div>
           </Link>
         ))}

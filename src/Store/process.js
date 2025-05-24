@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { create } from 'zustand';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { create } from "zustand";
 
 const useProcessStore = create((set, get) => ({
   userProcesses: [],
@@ -11,7 +11,7 @@ const useProcessStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await axios.get(
-        `http://localhost:3000/api/process/user`,
+        `https://iti-ejar-node-production.up.railway.app/api/process/user`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -29,7 +29,7 @@ const useProcessStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       const response = await axios.get(
-        `http://localhost:3000/api/process/finished`,
+        `https://iti-ejar-node-production.up.railway.app/api/process/finished`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ const useProcessStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       await axios.post(
-        `http://localhost:3000/api/process/${productId}`,
+        `https://iti-ejar-node-production.up.railway.app/api/process/${productId}`,
         processData,
         {
           headers: {
@@ -60,7 +60,7 @@ const useProcessStore = create((set, get) => ({
         `Request posted successfully\n Wait for the owner to accept it`
       );
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to post request');
+      toast.error(error.response?.data?.message || "Failed to post request");
       set({ error: error.response?.data?.message || error.message });
     }
   },
@@ -68,8 +68,8 @@ const useProcessStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       await axios.put(
-        `http://localhost:3000/api/process/${processId}`,
-        { status: 'in progress' },
+        `https://iti-ejar-node-production.up.railway.app/api/process/${processId}`,
+        { status: "in progress" },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -77,9 +77,9 @@ const useProcessStore = create((set, get) => ({
         }
       );
       set({ loading: false });
-      toast.success('Request accepted successfully');
+      toast.success("Request accepted successfully");
     } catch (error) {
-      toast.error('Failed to accept request');
+      toast.error("Failed to accept request");
       set({ error: error.response?.data?.message || error.message });
     }
   },
@@ -87,8 +87,8 @@ const useProcessStore = create((set, get) => ({
     try {
       set({ loading: true, error: null });
       await axios.put(
-        `http://localhost:3000/api/process/${processId}`,
-        { status: 'canceled' },
+        `https://iti-ejar-node-production.up.railway.app/api/process/${processId}`,
+        { status: "canceled" },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -96,10 +96,10 @@ const useProcessStore = create((set, get) => ({
         }
       );
       set({ loading: false });
-      toast.info('Request declined successfully');
+      toast.info("Request declined successfully");
     } catch (error) {
       set({ error: error.response?.data?.message || error.message });
-      toast.error('Failed to decline request');
+      toast.error("Failed to decline request");
     }
   },
 }));

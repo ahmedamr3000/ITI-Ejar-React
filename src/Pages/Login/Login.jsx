@@ -11,8 +11,7 @@ export default function Login() {
   const [apiError, setApiError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { setToken } = useAuthStore(); 
-  
+  const { setToken } = useAuthStore();
 
   const formik = useFormik({
     initialValues: {
@@ -22,33 +21,35 @@ export default function Login() {
     },
     validationSchema: Yup.object({
       identifier: Yup.string()
-    .test("is-valid-identifier", function (value) {
-      if (!value) {
-        return this.createError({ message: "Email or phone number is required." });
-      }
-      // Check if it's a valid email
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (emailRegex.test(value)) {
-        return true; // Valid email
-      }
-      const phoneRegex = /^01[0-9]{9}$/;
-      if (phoneRegex.test(value)) {
-        return true; // Valid phone number
-      }
+        .test("is-valid-identifier", function (value) {
+          if (!value) {
+            return this.createError({
+              message: "Email or phone number is required.",
+            });
+          }
+          // Check if it's a valid email
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (emailRegex.test(value)) {
+            return true; // Valid email
+          }
+          const phoneRegex = /^01[0-9]{9}$/;
+          if (phoneRegex.test(value)) {
+            return true; // Valid phone number
+          }
 
-      return this.createError({
-        message: "Invalid format. Use a valid email (e.g., user@example.com) or a valid Egyptian number (01xxxxxxxxx).",
-      });
-    })
-    .required("Email or phone number is required."),
-      password:Yup.string()
-      .min(8, "Password should be at least 8 characters long")
-      .matches(
-        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
-      )
-      .required("password is required"),
-    
+          return this.createError({
+            message:
+              "Invalid format. Use a valid email (e.g., user@example.com) or a valid Egyptian number (01xxxxxxxxx).",
+          });
+        })
+        .required("Email or phone number is required."),
+      password: Yup.string()
+        .min(8, "Password should be at least 8 characters long")
+        .matches(
+          /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
+        )
+        .required("password is required"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
       try {
@@ -56,7 +57,7 @@ export default function Login() {
         setIsLoading(true);
 
         const response = await axios.post(
-          "http://localhost:3000/api/auth/login",
+          "https://iti-ejar-node-production.up.railway.app/api/auth/login",
           {
             identifier: values.identifier, // Send email OR phone
             password: values.password,
@@ -88,17 +89,40 @@ export default function Login() {
   });
 
   return (
-    <div className="container mt-5" style={{ maxWidth: "600px", margin: "0 auto", transform: "scale(0.9)", transformOrigin: "top center"  ,minHeight: '100vh' }}>
-      <h2 className="text-left" style={{ color: "#562DDD", fontSize: "34px", fontWeight: 700, marginBottom: "20px" }}>
+    <div
+      className="container mt-5"
+      style={{
+        maxWidth: "600px",
+        margin: "0 auto",
+        transform: "scale(0.9)",
+        transformOrigin: "top center",
+        minHeight: "100vh",
+      }}
+    >
+      <h2
+        className="text-left"
+        style={{
+          color: "#562DDD",
+          fontSize: "34px",
+          fontWeight: 700,
+          marginBottom: "20px",
+        }}
+      >
         Log in to Ejar
       </h2>
 
-      {apiError && <div className="alert alert-danger text-center">{apiError}</div>}
+      {apiError && (
+        <div className="alert alert-danger text-center">{apiError}</div>
+      )}
 
       <form onSubmit={formik.handleSubmit} className="row g-3">
         {/* IDENTIFIER (EMAIL or PHONE) */}
         <div className="col-12">
-          <TextInput label="Email or Phone Number" id="identifier" formik={formik} />
+          <TextInput
+            label="Email or Phone Number"
+            id="identifier"
+            formik={formik}
+          />
         </div>
 
         {/* PASSWORD */}
@@ -116,8 +140,10 @@ export default function Login() {
               checked={formik.values.rememberMe}
               onChange={formik.handleChange}
             />
-            <label className="form-check-label" htmlFor="rememberMe"
-           style={{   fontSize:"16px"}}
+            <label
+              className="form-check-label"
+              htmlFor="rememberMe"
+              style={{ fontSize: "16px" }}
             >
               Remember Me
             </label>
@@ -125,33 +151,54 @@ export default function Login() {
         </div>
 
         <div className="col-12 text-center">
-          <button type="submit" className="btn" disabled={isLoading}
-            style={{ backgroundColor: "#562DDD", color: "white", width: "70%", fontSize: "22px",  marginTop: "5px",marginBottom:"10px"}}
-            >
+          <button
+            type="submit"
+            className="btn"
+            disabled={isLoading}
+            style={{
+              backgroundColor: "#562DDD",
+              color: "white",
+              width: "70%",
+              fontSize: "22px",
+              marginTop: "5px",
+              marginBottom: "10px",
+            }}
+          >
             {isLoading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                />
                 Loading...
               </>
             ) : (
               "Log In"
             )}
           </button>
-             {/* FORGOT PASSWORD & REGISTER LINKS */}
-             <p className="text-center mt-2">
-                <span 
-                  className="text-danger" 
-                  style={{ cursor: "pointer", textDecoration: "underline" }} 
-                  onClick={() => navigate("/forgot-password")}
-                >
-                  Forgot Password?
-                </span>
-              </p>
+          {/* FORGOT PASSWORD & REGISTER LINKS */}
+          <p className="text-center mt-2">
+            <span
+              className="text-danger"
+              style={{ cursor: "pointer", textDecoration: "underline" }}
+              onClick={() => navigate("/forgot-password")}
+            >
+              Forgot Password?
+            </span>
+          </p>
 
           <p className="mt-3" style={{ fontSize: "16px" }}>
             Don't have account ?{" "}
-            <span onClick={() => navigate("/register")}
-              style={{ color: "#5A3FFF", textDecoration: "underline", cursor: "pointer", fontWeight: "600", }}>
+            <span
+              onClick={() => navigate("/register")}
+              style={{
+                color: "#5A3FFF",
+                textDecoration: "underline",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
+            >
               register
             </span>
           </p>

@@ -30,8 +30,8 @@ export default function ProfilePicture({ userId }) {
   const isOwnProfile = !userId || userId === loggedInUserId;
 
   const getUrl = userId
-    ? `http://localhost:3000/api/user/${userId}` // other user
-    : "http://localhost:3000/api/user/profile-picture"; // self
+    ? `https://iti-ejar-node-production.up.railway.app/api/user/${userId}` // other user
+    : "https://iti-ejar-node-production.up.railway.app/api/user/profile-picture"; // self
 
   useEffect(() => {
     if (!token) return;
@@ -91,7 +91,7 @@ export default function ProfilePicture({ userId }) {
     try {
       setIsUploading(true);
       const { data } = await axios.put(
-        "http://localhost:3000/api/user/upload-profile-picture",
+        "https://iti-ejar-node-production.up.railway.app/api/user/upload-profile-picture",
         formData,
         {
           headers: {
@@ -117,68 +117,67 @@ export default function ProfilePicture({ userId }) {
 
   return (
     <div className="text-center my-3">
-      {/* Profile Picture */} 
+      {/* Profile Picture */}
       <div
-  onClick={() => setShowModal(true)}
-  className="rounded-circle border overflow-hidden d-flex align-items-center justify-content-center"
-  style={{
-    width: 130,
-    height: 130,
-    backgroundColor: "#f0f0f0",
-    position: "relative",
-    cursor: "pointer",
-  }}
->
-  {/* Profile Picture */}
-  <img
-    src={localPreview || profilePicture}
-    onLoad={() => setIsImageLoading(false)}
-    onError={(e) => {
-      e.target.onerror = null;
-      e.target.src = defaultPic;
-      setIsImageLoading(false);
-    }}
-    alt="Profile"
-    style={{
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      position: "absolute",
-      top: 0,
-      left: 0,
-      opacity: isImageLoading ? 0 : 1,
-      transition: "opacity 0.4s ease-in-out",
-    }}
-  />
+        onClick={() => setShowModal(true)}
+        className="rounded-circle border overflow-hidden d-flex align-items-center justify-content-center"
+        style={{
+          width: 130,
+          height: 130,
+          backgroundColor: "#f0f0f0",
+          position: "relative",
+          cursor: "pointer",
+        }}
+      >
+        {/* Profile Picture */}
+        <img
+          src={localPreview || profilePicture}
+          onLoad={() => setIsImageLoading(false)}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = defaultPic;
+            setIsImageLoading(false);
+          }}
+          alt="Profile"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            position: "absolute",
+            top: 0,
+            left: 0,
+            opacity: isImageLoading ? 0 : 1,
+            transition: "opacity 0.4s ease-in-out",
+          }}
+        />
 
-  {/* Spinner (inside container, not floating) */}
-  {isImageLoading && (
-    <div className="spinner-border text-secondary" role="status" />
-  )}
+        {/* Spinner (inside container, not floating) */}
+        {isImageLoading && (
+          <div className="spinner-border text-secondary" role="status" />
+        )}
 
-  {/* Uploading Overlay */}
-  {isUploading && (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        background: "rgba(0,0,0,0.5)",
-        color: "#fff",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "50%",
-        zIndex: 2,
-      }}
-    >
-      Uploading...
-    </div>
-  )}
-</div>
-
+        {/* Uploading Overlay */}
+        {isUploading && (
+          <div
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              background: "rgba(0,0,0,0.5)",
+              color: "#fff",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "50%",
+              zIndex: 2,
+            }}
+          >
+            Uploading...
+          </div>
+        )}
+      </div>
 
       {/* Error message */}
       {errorMessage && (
@@ -188,9 +187,17 @@ export default function ProfilePicture({ userId }) {
       )}
 
       {/* Instructions */}
-      <div style={{ minHeight: 24}}>
+      <div style={{ minHeight: 24 }}>
         {isOwnProfile && (
-          <p style={{ color: "#555", fontSize: 14, marginTop: 7 , marginBottom: 0, marginLeft:"-2rem" }}>
+          <p
+            style={{
+              color: "#555",
+              fontSize: 14,
+              marginTop: 7,
+              marginBottom: 0,
+              marginLeft: "-2rem",
+            }}
+          >
             Click photo to enlarge or change
           </p>
         )}

@@ -206,13 +206,16 @@ const ProductDetails = () => {
     try {
       console.log(id);
 
-      const response = await fetch(`http://localhost:3000/api/product/${id}`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `https://iti-ejar-node-production.up.railway.app/api/product/${id}`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const data = await response.json();
       console.log(data);
 

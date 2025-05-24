@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { create } from "zustand";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const useProductStore = create((set) => ({
   product: null,
@@ -15,11 +15,11 @@ const useProductStore = create((set) => ({
 
     try {
       const response = await axios.get(
-        `http://localhost:3000/api/product/${id}`
+        `https://iti-ejar-node-production.up.railway.app/api/product/${id}`
       );
       set({ product: response.data, error: null, loading: false });
     } catch (error) {
-      console.error('Error fetching product:', error);
+      console.error("Error fetching product:", error);
       set({ product: null, error: error.message, loading: false });
     }
   },
@@ -29,7 +29,7 @@ const useProductStore = create((set) => ({
       const formData = new FormData();
 
       if (clearMessage) {
-        updatedData.confirmMessage = '';
+        updatedData.confirmMessage = "";
       }
 
       for (const key in updatedData) {
@@ -43,18 +43,18 @@ const useProductStore = create((set) => ({
       }
 
       const response = await axios.post(
-        `http://localhost:3000/api/product/${updatedData._id}`,
+        `https://iti-ejar-node-production.up.railway.app/api/product/${updatedData._id}`,
         formData,
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         }
       );
     } catch (error) {
       console.error(
-        'Error updating product:',
+        "Error updating product:",
         error.response?.data || error.message
       );
     }
@@ -66,10 +66,10 @@ const useProductStore = create((set) => ({
 
       set({ isLoading: true, err: null });
 
-      const categoryId = typeof id === 'object' && id !== null ? id._id : id;
+      const categoryId = typeof id === "object" && id !== null ? id._id : id;
 
       const response = await axios.get(
-        `http://localhost:3000/api/product/?category=${categoryId.toString()}`
+        `https://iti-ejar-node-production.up.railway.app/api/product/?category=${categoryId.toString()}`
       );
 
       const data = response.data.data;
@@ -80,7 +80,7 @@ const useProductStore = create((set) => ({
         err: null,
       });
     } catch (error) {
-      console.error('Error fetching products:', error.message);
+      console.error("Error fetching products:", error.message);
       set({ isLoading: false, err: error.message });
     }
   },
@@ -88,12 +88,12 @@ const useProductStore = create((set) => ({
   gteProccesOfProduct: async (id, token) => {
     try {
       if (!id) {
-        console.warn('ID is undefined, waiting for data...');
+        console.warn("ID is undefined, waiting for data...");
         return;
       }
 
       const response = await axios.get(
-        `http://localhost:3000/api/process/getprod/${id}`,
+        `https://iti-ejar-node-production.up.railway.app/api/process/getprod/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -104,7 +104,7 @@ const useProductStore = create((set) => ({
       const data = response.data.data?.[0];
       set({ processData: data || null });
     } catch (error) {
-      console.error('Error fetching products:', error.message);
+      console.error("Error fetching products:", error.message);
       set({ processData: null });
     }
   },

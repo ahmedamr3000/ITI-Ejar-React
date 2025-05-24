@@ -1,6 +1,6 @@
-import axios from 'axios';
-import { create } from 'zustand';
-import { toast } from 'react-toastify';
+import axios from "axios";
+import { create } from "zustand";
+import { toast } from "react-toastify";
 
 const useChatStore = create((set, get) => ({
   userChats: [],
@@ -13,7 +13,7 @@ const useChatStore = create((set, get) => ({
     try {
       set({ chatLoading: true, chatError: null });
       const response = await axios.post(
-        `http://localhost:3000/api/chat`,
+        `https://iti-ejar-node-production.up.railway.app/api/chat`,
         { receiverId },
         {
           headers: {
@@ -36,7 +36,7 @@ const useChatStore = create((set, get) => ({
     try {
       set({ chatLoading: true, chatError: null });
       const response = await axios.get(
-        `http://localhost:3000/api/chat/${chatId}`,
+        `https://iti-ejar-node-production.up.railway.app/api/chat/${chatId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -56,11 +56,14 @@ const useChatStore = create((set, get) => ({
   getUserChats: async (token) => {
     try {
       set({ chatLoading: true, chatError: null });
-      const response = await axios.get(`http://localhost:3000/api/chat`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://iti-ejar-node-production.up.railway.app/api/chat`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const chats = response?.data;
       set({ userChats: chats, chatLoading: false });
     } catch (error) {
@@ -73,11 +76,15 @@ const useChatStore = create((set, get) => ({
   postMessage: async (message, token) => {
     try {
       set({ messagesLoading: true, messagesError: null });
-      await axios.post(`http://localhost:3000/api/message`, message, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        `https://iti-ejar-node-production.up.railway.app/api/message`,
+        message,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       set({ messagesLoading: false });
     } catch (error) {
       set({
@@ -90,7 +97,7 @@ const useChatStore = create((set, get) => ({
     try {
       set({ messagesLoading: true, messagesError: null });
       const response = await axios.get(
-        `http://localhost:3000/api/message/${chatId}`,
+        `https://iti-ejar-node-production.up.railway.app/api/message/${chatId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

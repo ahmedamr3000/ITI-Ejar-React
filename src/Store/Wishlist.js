@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import { create } from "zustand";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const useWishlistStore = create((set, get) => ({
   wishlist: [],
@@ -8,9 +8,12 @@ const useWishlistStore = create((set, get) => ({
 
   fetchWishlist: async (token) => {
     try {
-      const res = await axios.get('http://localhost:3000/api/wishlist', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://iti-ejar-node-production.up.railway.app/api/wishlist",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const wishlist = res.data.wishlist.map((item) => ({
         ...item,
         id: item._id,
@@ -18,9 +21,8 @@ const useWishlistStore = create((set, get) => ({
       }));
       set({ wishlist, count: wishlist.length });
     } catch (err) {
-      toast.error('Failed to fetch wishlist');
+      toast.error("Failed to fetch wishlist");
       throw err; // rethrow to let the component handle it
-
     }
   },
 
@@ -28,40 +30,46 @@ const useWishlistStore = create((set, get) => ({
     const productId = product.id || product._id;
     try {
       await axios.post(
-        `http://localhost:3000/api/wishlist/add/${productId}`,
+        `https://iti-ejar-node-production.up.railway.app/api/wishlist/add/${productId}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
       const updated = [...get().wishlist, { ...product, id: productId }];
       set({ wishlist: updated, count: updated.length });
-      toast.success('Product added to wishlist');
+      toast.success("Product added to wishlist");
     } catch (err) {
-      toast.error('Failed to add to wishlist');
+      toast.error("Failed to add to wishlist");
     }
   },
 
   removeFromWishlist: async (productId, token) => {
     try {
-      await axios.delete(`http://localhost:3000/api/wishlist/remove/${productId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://iti-ejar-node-production.up.railway.app/api/wishlist/remove/${productId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const updated = get().wishlist.filter((item) => item.id !== productId);
       set({ wishlist: updated, count: updated.length });
-      toast.info('Product removed from wishlist');
+      toast.info("Product removed from wishlist");
     } catch (err) {
-      toast.error('Failed to remove from wishlist');
+      toast.error("Failed to remove from wishlist");
     }
   },
 
   clearWishlist: async (token) => {
     try {
-      await axios.delete(`http://localhost:3000/api/wishlist/clear`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.delete(
+        `https://iti-ejar-node-production.up.railway.app/api/wishlist/clear`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       set({ wishlist: [], count: 0 });
-      toast.info('Wishlist cleared');
+      toast.info("Wishlist cleared");
     } catch (err) {
-      toast.error('Failed to clear wishlist');
+      toast.error("Failed to clear wishlist");
     }
   },
 

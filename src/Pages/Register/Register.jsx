@@ -34,46 +34,66 @@ export default function Register() {
     userName: Yup.string()
       .min(3, "Name should be at least 3 characters long")
       .max(29, "Name should be at most 29 characters long")
-      .matches(/^[a-zA-Z0-9_ ]+$/, "Only letters, numbers, underscores, and spaces are allowed.")
+      .matches(
+        /^[a-zA-Z0-9_ ]+$/,
+        "Only letters, numbers, underscores, and spaces are allowed."
+      )
       .required("Name is required"),
-    email: Yup.string().email("Invalid email address").required("Email is required"),
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
     password: Yup.string()
-    .min(8, "Password should be at least 8 characters long")
-    .matches(
-      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
-    )
-    .required(" password is required"),
-  
-      confirmedPassword: Yup.string()
+      .min(8, "Password should be at least 8 characters long")
+      .matches(
+        /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
+      )
+      .required(" password is required"),
+
+    confirmedPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords must match")
       .matches(
         /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
         "Password must contain at least one uppercase, one lowercase letter, one number, and one special character"
       )
       .required("Confirm password is required"),
-    
-    phone: Yup.string()
-      .matches(/^01[0-9]{9}$/, "Phone number must be a valid Egyptian number (01xxxxxxxxx)")
-      .required("Phone number is required"),
-      dob: Yup.date()
-  .min(new Date(new Date().setFullYear(new Date().getFullYear() - 70)), "You must not be older than 70 years old")
-  .max(new Date(new Date().setFullYear(new Date().getFullYear() - 15)), "You must be at least 15 years old")
-  .required("Date of birth is required"),
 
-    
-      address: Yup.string()
+    phone: Yup.string()
+      .matches(
+        /^01[0-9]{9}$/,
+        "Phone number must be a valid Egyptian number (01xxxxxxxxx)"
+      )
+      .required("Phone number is required"),
+    dob: Yup.date()
+      .min(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 70)),
+        "You must not be older than 70 years old"
+      )
+      .max(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 15)),
+        "You must be at least 15 years old"
+      )
+      .required("Date of birth is required"),
+
+    address: Yup.string()
       .min(7, "Address must be at least 7 characters.")
       .max(50, "Address must not exceed 50 characters.")
       .matches(
         /^[a-zA-Z0-9\s,'-]+$/,
         "Only letters, numbers, spaces, commas, and dashes are allowed."
       )
-      .required("Address is required, Please enter your full address (street, city, etc.)."),
+      .required(
+        "Address is required, Please enter your full address (street, city, etc.)."
+      ),
     idNumber: Yup.string()
-      .matches(/^[2-3][0-9]{13}$/, "Invalid Egyptian ID number (must start with 2 or 3 and be 14 digits)")
+      .matches(
+        /^[2-3][0-9]{13}$/,
+        "Invalid Egyptian ID number (must start with 2 or 3 and be 14 digits)"
+      )
       .required("ID Number is required"),
-    gender: Yup.string().oneOf(["male", "female"]).required("Gender is required"),
+    gender: Yup.string()
+      .oneOf(["male", "female"])
+      .required("Gender is required"),
     idPictureFront: Yup.mixed().required("Front ID Picture is required"),
     idPictureBack: Yup.mixed().required("Back ID Picture is required"),
   });
@@ -83,24 +103,26 @@ export default function Register() {
       setApiError(null);
       setRegistrationSuccess(false);
       setIsLoading(true);
-       //  Check if front and back images are the same file (by name, size & type)
-       const front = values.idPictureFront;
-       const back = values.idPictureBack;
-       if (
+      //  Check if front and back images are the same file (by name, size & type)
+      const front = values.idPictureFront;
+      const back = values.idPictureBack;
+      if (
         front &&
         back &&
         front.name === back.name &&
         front.size === back.size &&
         front.type === back.type
       ) {
-        setDuplicateFileError("Front and back ID pictures cannot be the same file.");
+        setDuplicateFileError(
+          "Front and back ID pictures cannot be the same file."
+        );
         setIsLoading(false);
         return;
       } else {
         setDuplicateFileError(""); // Clear it when valid
       }
-      
-      // console.log("Submitting values:", values); // debugging 
+
+      // console.log("Submitting values:", values); // debugging
       // If uploading files, create form data
       const formData = new FormData();
       Object.keys(values).forEach((key) => {
@@ -108,10 +130,13 @@ export default function Register() {
           formData.append(key, values[key]);
         }
       });
-      const response = await axios.post("http://localhost:3000/api/auth/signUp", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-  
+      const response = await axios.post(
+        "https://iti-ejar-node-production.up.railway.app/api/auth/signUp",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (response.status === 200) {
         setRegistrationSuccess(true);
@@ -124,11 +149,10 @@ export default function Register() {
       console.error("API Error:", error.response?.data);
       setApiError(error.response?.data?.message || "Something went wrong...");
       window.scrollTo({ top: 0, behavior: "smooth" });
-
     } finally {
       setIsLoading(false);
     }
-}
+  }
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -136,25 +160,37 @@ export default function Register() {
   });
 
   return (
-    <div className="container mt-5"
-    style={{ margin: "0 auto", transform: "scale(0.9)", transformOrigin: "top center",  minHeight: '100vh' }}
+    <div
+      className="container mt-5"
+      style={{
+        margin: "0 auto",
+        transform: "scale(0.9)",
+        transformOrigin: "top center",
+        minHeight: "100vh",
+      }}
     >
       <h2
         className="text-left"
-        style={{ color: "rgba(86, 45, 221, 1)", fontSize: "42px", fontWeight: "bold" }}
+        style={{
+          color: "rgba(86, 45, 221, 1)",
+          fontSize: "42px",
+          fontWeight: "bold",
+        }}
       >
         Create an account
       </h2>
       <p className="text-left">Enter your details below</p>
 
       {registrationSuccess && (
-        <div className="alert alert-success">Registration successful! Redirecting to login...</div>
+        <div className="alert alert-success">
+          Registration successful! Redirecting to login...
+        </div>
       )}
       {apiError && <div className="alert alert-danger">{apiError}</div>}
 
       <form onSubmit={formik.handleSubmit} className="row g-3">
-         {/* NAME */}
-         <div className="col-md-6">
+        {/* NAME */}
+        <div className="col-md-6">
           <TextInput label="Name:" id="userName" formik={formik} />
         </div>
 
@@ -170,7 +206,11 @@ export default function Register() {
 
         {/* CONFIRM PASSWORD */}
         <div className="col-md-6">
-          <PasswordInput label="Confirm Password:" id="confirmedPassword" formik={formik} />
+          <PasswordInput
+            label="Confirm Password:"
+            id="confirmedPassword"
+            formik={formik}
+          />
         </div>
 
         {/* PHONE */}
@@ -180,7 +220,12 @@ export default function Register() {
 
         {/* DOB */}
         <div className="col-md-6">
-          <TextInput label="Date of Birth:" id="dob" formik={formik} type="date" />
+          <TextInput
+            label="Date of Birth:"
+            id="dob"
+            formik={formik}
+            type="date"
+          />
         </div>
 
         {/* ADDRESS */}
@@ -201,20 +246,43 @@ export default function Register() {
         {/* ID PICTURES (Front/Back) */}
         <div className="col-md-6 d-flex justify-content-between">
           <div style={{ width: "48%" }}>
-          <FileInput label="ID Picture (Front):" fieldName="idPictureFront" formik={formik} externalError={duplicateFileError}/>
+            <FileInput
+              label="ID Picture (Front):"
+              fieldName="idPictureFront"
+              formik={formik}
+              externalError={duplicateFileError}
+            />
           </div>
           <div style={{ width: "48%" }}>
-          <FileInput label="ID Picture (Back):" fieldName="idPictureBack" formik={formik} externalError={duplicateFileError}/>
+            <FileInput
+              label="ID Picture (Back):"
+              fieldName="idPictureBack"
+              formik={formik}
+              externalError={duplicateFileError}
+            />
           </div>
         </div>
         {/* SUBMIT BUTTON */}
         <div className="col-12 text-center">
-          <button type="submit" className="btn" disabled={isLoading}
-            style={{ backgroundColor: "#562DDD", color: "white", width: "50%", fontSize: "22px", marginTop: "5px",}}
-            >
+          <button
+            type="submit"
+            className="btn"
+            disabled={isLoading}
+            style={{
+              backgroundColor: "#562DDD",
+              color: "white",
+              width: "50%",
+              fontSize: "22px",
+              marginTop: "5px",
+            }}
+          >
             {isLoading ? (
               <>
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  role="status"
+                  aria-hidden="true"
+                />
                 Loading...
               </>
             ) : (
@@ -224,8 +292,15 @@ export default function Register() {
 
           <p className="mt-3" style={{ fontSize: "16px" }}>
             Already have an account?{" "}
-            <span onClick={() => navigate("/login")}
-              style={{ color: "#5A3FFF", textDecoration: "underline", cursor: "pointer", fontWeight: "600", }}>
+            <span
+              onClick={() => navigate("/login")}
+              style={{
+                color: "#5A3FFF",
+                textDecoration: "underline",
+                cursor: "pointer",
+                fontWeight: "600",
+              }}
+            >
               Log in
             </span>
           </p>
