@@ -356,30 +356,7 @@ const ProductDetails = () => {
                 </div>
               ) : (
                 <div className="parent-div">
-                  <ReactImageMagnify
-                    {...{
-                      smallImage: {
-                        alt: "Product Image",
-                        isFluidWidth: false,
-                        src: mainImage,
-                        width: 400,
-                        height: 400,
-                      },
-                      largeImage: {
-                        src: mainImage,
-                        width: 1200,
-                        height: 1200,
-                      },
-                      enlargedImageContainerDimensions: {
-                        width: "120%",
-                        height: "120%",
-                      },
-                      enlargedImageContainerStyle: {
-                        backgroundColor: "#ccc",
-                        zIndex: 1000,
-                      },
-                    }}
-                  />
+                  <img src={mainImage} alt="" />
                 </div>
               )}
 
