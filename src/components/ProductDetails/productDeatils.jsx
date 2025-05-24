@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ReactImageMagnify from "react-image-magnify";
 import { useProductStore } from "../../Store/Deatils";
 import { jwtDecode } from "jwt-decode";
 import { Link, useNavigate, useParams } from "react-router-dom";
