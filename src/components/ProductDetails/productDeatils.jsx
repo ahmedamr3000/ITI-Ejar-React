@@ -356,7 +356,7 @@ const ProductDetails = () => {
                 </div>
               ) : (
                 <div className="parent-div">
-                  <img src={mainImage} alt="" />
+                  <img src={mainImage} className="w-100" alt="" />
                 </div>
               )}
 
